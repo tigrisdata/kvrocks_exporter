@@ -1,0 +1,25 @@
+name: build amd64 image
+
+on:
+  pull_request:
+    paths:
+      - Dockerfile*
+      - .github/workflows/push-docker-multiarch.yaml
+      - .github/workflows/push-docker-image.yaml
+  push:
+    branches:
+      - master
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  amd64:
+    uses: ./.github/workflows/push-docker-image.yaml
+    secrets: inherit
+    with:
+      docker_repository: "tigrisdata/kvrocks-exporter"
+      quay_repository: "quay.io/tigrisdata/kvrocks-exporter"
+      file: Dockerfile
+      platforms: amd64,arm64
+      event_name: ${{ github.event_name }}
